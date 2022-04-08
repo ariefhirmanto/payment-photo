@@ -1,11 +1,42 @@
 package repository
 
-import "database/sql"
+import (
+	"payment/models"
+
+	"gorm.io/gorm"
+)
 
 type transactionRepository struct {
-	TransactionDB *sql.DB
+	TransactionDB *gorm.DB
 }
 
-func NewTransactionRepository(db *sql.DB) *transactionRepository {
+func NewTransactionRepository(db *gorm.DB) *transactionRepository {
 	return &transactionRepository{TransactionDB: db}
+}
+
+func (r *transactionRepository) CreateTransaction(transaction models.Transaction) (models.Transaction, error) {
+	err := r.TransactionDB.Create(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
+}
+
+func (r *transactionRepository) UpdateTransaction(transaction models.Transaction) (models.Transaction, error) {
+	err := r.TransactionDB.Save(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+	return transaction, nil
+}
+
+func (r *transactionRepository) GetByID(ID int64) (models.Transaction, error) {
+	var transaction models.Transaction
+	err := r.TransactionDB.Where("id = ?", ID).Find(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
 }

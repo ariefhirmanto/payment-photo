@@ -1,4 +1,4 @@
 package payments
 
-type Controller struct {
+type Controller interface {
 }
