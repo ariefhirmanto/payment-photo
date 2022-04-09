@@ -1,19 +1,38 @@
 package config
 
+import (
+	"log"
+
+	_viper "github.com/spf13/viper"
+)
+
 type MainConfig struct {
 	Database DatabaseConfig
 	Midtrans PaymentConfig
 }
 
 type DatabaseConfig struct {
-	// Isa
+	Host   string
+	Port   string
+	DBName string
+	DBUser string
+	DBPass string
 }
 
 type PaymentConfig struct {
-	// Isa
+	ClientKey string
+	ServerKey string
+	APIEnv    string
 }
 
 func LoadConfig(path string) (config MainConfig) {
-	// Isa
-	return config
+	_viper.SetConfigName("config") // read .yaml config
+	_viper.AddConfigPath(path)
+	err := _viper.ReadInConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+	_viper.UnmarshalKey("Database", &config.Database)
+	_viper.UnmarshalKey("Midtrans", &config.Midtrans)
+	return
 }
