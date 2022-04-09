@@ -11,3 +11,5 @@ type paymentController struct {
 func NewPaymentController(usecase payments.Usecase) *paymentController {
 	return &paymentController{paymentUC: usecase}
 }
+
+// func (p *paymentController)
