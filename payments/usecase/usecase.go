@@ -1,91 +1,80 @@
 package usecase
 
 import (
-	"context"
 	"payment/models"
 	"strconv"
 
 	"github.com/midtrans/midtrans-go"
-	snap "github.com/midtrans/midtrans-go/snap"
+	"github.com/midtrans/midtrans-go/coreapi"
+	"github.com/midtrans/midtrans-go/snap"
 )
 
-var s snap.Client
-
-type paymentUsecase struct {
-	ClientKey string
-	ServerKey string
-	Env       string
+type paymentMidtrans struct {
+	coreapi    coreapi.Client
+	snapClient snap.Client
 }
 
-func NewPaymentUsecase(clientKey string, serverKey string, env string) *paymentUsecase {
-	return &paymentUsecase{
-		ClientKey: clientKey,
-		ServerKey: serverKey,
-		Env:       env,
+func NewPaymentMidtrans(clientKey string, serverKey string, env string) *paymentMidtrans {
+	cfgEnv := midtrans.Sandbox
+	if env == "production" {
+		cfgEnv = midtrans.Production
+	}
+
+	return &paymentMidtrans{
+		coreapi: coreapi.Client{
+			ClientKey: clientKey,
+			ServerKey: serverKey,
+			Env:       cfgEnv,
+		},
+		snapClient: snap.Client{
+			ServerKey: serverKey,
+			Env:       cfgEnv,
+		},
 	}
 }
 
-func (u *paymentUsecase) InitializeSnapClient() {
-	env := midtrans.Sandbox
-	if u.Env == "production" {
-		env = midtrans.Sandbox
+func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.ChargeResponse, error) {
+	paymentType := coreapi.PaymentTypeQris
+	if input.PaymentType == 1 {
+		paymentType = coreapi.PaymentTypeGopay
 	}
 
-	s.New(u.ServerKey, env)
-}
+	p.coreapi.New(p.coreapi.ServerKey, p.coreapi.Env)
 
-func (u *paymentUsecase) GetPaymentURL(transaction models.Transaction) (string, error) {
-	s.Options.SetContext(context.Background())
-
-	resp, err := s.CreateTransactionUrl(u.GenerateSnapReq(transaction))
-	if err != nil {
-		return "", err
-	}
-
-	return resp, nil
-}
-
-func (u *paymentUsecase) GenerateSnapReq(transaction models.Transaction) *snap.Request {
-
-	// Initiate Customer address
-	// custAddress := &midtrans.CustomerAddress{
-	// 	FName:       "John",
-	// 	LName:       "Doe",
-	// 	Phone:       "081234567890",
-	// 	Address:     "Baker Street 97th",
-	// 	City:        "Jakarta",
-	// 	Postcode:    "16000",
-	// 	CountryCode: "IDN",
-	// }
-
-	// Initiate Snap Request
-	snapReq := &snap.Request{
+	chargeReq := &coreapi.ChargeReq{
+		PaymentType: paymentType,
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  strconv.Itoa(int(transaction.ID)),
-			GrossAmt: transaction.Amount,
+			OrderID:  strconv.Itoa(int(input.ID)),
+			GrossAmt: 35000,
 		},
-		// CreditCard: &snap.CreditCardDetails{
-		// 	Secure: true,
-		// },
-		// CustomerDetail: &midtrans.CustomerDetails{
-		// 	FName:    "John",
-		// 	LName:    "Doe",
-		// 	Email:    "john@doe.com",
-		// 	Phone:    "081234567890",
-		// },
-		// EnabledPayments: snap.AllSnapPaymentType,
-		EnabledPayments: []snap.SnapPaymentType{
-			snap.PaymentTypeGopay,
-			snap.PaymentTypeShopeepay,
-		},
-		// Items: &[]midtrans.ItemDetails{
-		// 	{
-		// 		ID:    "ITEM1",
-		// 		Price: 200000,
-		// 		Qty:   1,
-		// 		Name:  "Someitem",
-		// 	},
-		// },
 	}
-	return snapReq
+
+	res, err := p.coreapi.ChargeTransaction(chargeReq)
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
+}
+
+func (p *paymentMidtrans) GetPaymentURL(input models.PaymentTransaction) (string, error) {
+	paymentType := snap.PaymentTypeGopay
+	p.snapClient.New(p.snapClient.ServerKey, p.snapClient.Env)
+
+	chargeReq := &snap.Request{
+		EnabledPayments: []snap.SnapPaymentType{
+			paymentType,
+		},
+		TransactionDetails: midtrans.TransactionDetails{
+			OrderID:  strconv.Itoa(int(input.ID)),
+			GrossAmt: 35000,
+		},
+	}
+
+	res, err := p.snapClient.CreateTransactionUrl(chargeReq)
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
 }

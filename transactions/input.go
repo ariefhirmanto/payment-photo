@@ -3,9 +3,9 @@ package transactions
 import "errors"
 
 type InputTransactionRequest struct {
-	ID     int64  `json:"id" binding:"required"`
-	Amount int64  `json:"amount" binding:"required"`
-	Status string `json:"status" binding:"required"`
+	ID          int64 `json:"id"`
+	Amount      int64 `json:"amount" binding:"required"`
+	PaymentType int   `json:"payment_type"`
 }
 
 type InputTransactionID struct {

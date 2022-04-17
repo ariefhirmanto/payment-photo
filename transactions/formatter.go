@@ -3,11 +3,10 @@ package transactions
 import "payment/models"
 
 type TransactionFormatter struct {
-	ID         int64  `json:"id"`
-	Amount     int64  `json:"amount"`
-	Status     string `json:"status"`
-	Code       string `json:"code"`
-	PaymentURL string `json:"payment_url"`
+	ID        int64  `json:"id"`
+	Amount    int64  `json:"amount"`
+	Status    string `json:"status"`
+	QRCodeURL string `json:"qr_code"`
 }
 
 func FormatTransaction(transaction models.Transaction) TransactionFormatter {
@@ -15,7 +14,6 @@ func FormatTransaction(transaction models.Transaction) TransactionFormatter {
 	formatter.ID = transaction.ID
 	formatter.Amount = transaction.Amount
 	formatter.Status = transaction.Status
-	formatter.Code = transaction.Code
-	formatter.PaymentURL = transaction.PaymentURL
+	formatter.QRCodeURL = transaction.QRCodeURL
 	return formatter
 }

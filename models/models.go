@@ -6,9 +6,8 @@ type Transaction struct {
 	ID          int64
 	Amount      int64
 	Status      string
-	Code        string
 	PaymentType int
-	PaymentURL  string
+	QRCodeURL   string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -16,5 +15,5 @@ type Transaction struct {
 type PaymentTransaction struct {
 	ID          int64
 	Amount      int64
-	PaymentType string
+	PaymentType int
 }

@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"net/http"
 	"os"
@@ -10,17 +9,22 @@ import (
 	"time"
 
 	"payment/config"
+	paymentUsecase "payment/payments/usecase"
+	transactionController "payment/transactions/controller"
+	transactionRepo "payment/transactions/repository"
+	transactionUsecase "payment/transactions/usecase"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Server struct {
 	httpServer *http.Server
 	cfg        *config.MainConfig
-	db         *sql.DB
+	db         *gorm.DB
 }
 
-func NewServer(cfg *config.MainConfig, db *sql.DB) *Server {
+func NewServer(cfg *config.MainConfig, db *gorm.DB) *Server {
 	return &Server{
 		cfg: cfg,
 		db:  db,
@@ -32,15 +36,16 @@ func (s *Server) Run() error {
 	router.Use(CORSMiddleware())
 
 	// Initialize repository
-
+	transactionRepo := transactionRepo.NewTransactionRepository(s.db)
 	// initialize usecase
-
-	// initialize controller
-
+	paymentUC := paymentUsecase.NewPaymentMidtrans(s.cfg.Midtrans.ClientKey, s.cfg.Midtrans.ServerKey, s.cfg.Midtrans.APIEnv)
+	transactionUC := transactionUsecase.NewTransactionUsecase(transactionRepo, paymentUC)
 	// initialize router
+	transactionController.RegisterHTTPEndpoints(router, transactionUC)
 
+	address := ":9000"
 	s.httpServer = &http.Server{
-		Addr:           "",
+		Addr:           address,
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -48,7 +53,7 @@ func (s *Server) Run() error {
 	}
 
 	go func() {
-		log.Println("Listening and serving POST service HTTP on localhost:", "address")
+		log.Println("Listening and serving POST service HTTP on localhost:", address)
 		if err := s.httpServer.ListenAndServe(); err != nil {
 			log.Fatalf("Failed to listen and serve: %+v", err)
 		}
