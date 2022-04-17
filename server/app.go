@@ -43,7 +43,7 @@ func (s *Server) Run() error {
 	// initialize router
 	transactionController.RegisterHTTPEndpoints(router, transactionUC)
 
-	address := ":9000"
+	address := ":8080"
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        router,
@@ -53,7 +53,7 @@ func (s *Server) Run() error {
 	}
 
 	go func() {
-		log.Println("Listening and serving POST service HTTP on localhost:", address)
+		log.Println("Listening and serving POST service HTTP on localhost", address)
 		if err := s.httpServer.ListenAndServe(); err != nil {
 			log.Fatalf("Failed to listen and serve: %+v", err)
 		}

@@ -26,8 +26,11 @@ type PaymentConfig struct {
 }
 
 func LoadConfig(path string) (config MainConfig) {
+	// _viper.AddConfigPath("./config/")
+	_viper.AddConfigPath("/app/config")
+	_viper.AddConfigPath("./config")
+	_viper.SetConfigType("yaml")
 	_viper.SetConfigName("config") // read .yaml config
-	_viper.AddConfigPath(path)
 	err := _viper.ReadInConfig()
 	if err != nil {
 		log.Fatal(err)

@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  app:
+    container_name: payment_service
+    build: .
+    ports:
+      - 8080:8080
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_USER: "photobooth"
+      MYSQL_PASSWORD: "photobooth123"
+      MYSQL_DATABASE: "project"
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
