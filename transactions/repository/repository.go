@@ -4,6 +4,7 @@ import (
 	"payment/models"
 
 	"gorm.io/gorm"
+	"gorm.io/hints"
 )
 
 type transactionRepository struct {
@@ -33,7 +34,10 @@ func (r *transactionRepository) UpdateTransaction(transaction models.Transaction
 
 func (r *transactionRepository) GetByID(ID int64) (models.Transaction, error) {
 	var transaction models.Transaction
-	err := r.TransactionDB.Where("id = ?", ID).Find(&transaction).Error
+	// with index
+	err := r.TransactionDB.Clauses(hints.UseIndex("idx_status")).Where("id = ?", ID).Find(&transaction).Error
+	// without indexing
+	// err := r.TransactionDB.Where("id = ?", ID).Find(&transaction).Error
 	if err != nil {
 		return transaction, err
 	}
