@@ -45,7 +45,7 @@ func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.C
 		PaymentType: paymentType,
 		TransactionDetails: midtrans.TransactionDetails{
 			OrderID:  strconv.Itoa(int(input.ID)),
-			GrossAmt: 35000,
+			GrossAmt: 30000,
 		},
 	}
 

@@ -61,13 +61,17 @@ func (t *transactionController) GetTransactionByID(c *gin.Context) {
 	transaction, err := t.transactionUC.FindByID(input)
 	if err != nil {
 		response := helper.APIResponse(
-			"Create transaction failed",
+			"Get transaction failed",
 			http.StatusUnprocessableEntity, "error", nil)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
 
-	c.JSON(http.StatusOK, transaction)
+	formatter := transactions.FormatTransaction(transaction)
+	response := helper.APIResponse(
+		"Success create transaction",
+		http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
 }
 
 func (t *transactionController) GetNotification(c *gin.Context) {

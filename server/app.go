@@ -43,7 +43,7 @@ func (s *Server) Run() error {
 	// initialize router
 	transactionController.RegisterHTTPEndpoints(router, transactionUC)
 
-	address := ":8080"
+	address := ":9000"
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        router,
