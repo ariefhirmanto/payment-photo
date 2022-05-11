@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Load config data
-	config := _config.LoadConfig("./config/")
+	config := _config.LoadConfig()
 
 	// Return database connection instance
 	db := _config.InitDB(config)

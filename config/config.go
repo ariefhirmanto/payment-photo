@@ -25,8 +25,7 @@ type PaymentConfig struct {
 	APIEnv    string
 }
 
-func LoadConfig(path string) (config MainConfig) {
-	// _viper.AddConfigPath("./config/")
+func LoadConfig() (config MainConfig) {
 	_viper.AddConfigPath("/app/config")
 	_viper.AddConfigPath("./config")
 	_viper.SetConfigType("yaml")
