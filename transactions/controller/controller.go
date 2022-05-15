@@ -69,7 +69,7 @@ func (t *transactionController) GetTransactionByID(c *gin.Context) {
 
 	formatter := transactions.FormatTransaction(transaction)
 	response := helper.APIResponse(
-		"Success create transaction",
+		"Success get data transaction",
 		http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }

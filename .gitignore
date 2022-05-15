@@ -1,4 +1,6 @@
 config.yaml
 /config/config.prod.yaml
 /config/config.local.yaml
+/config/config.proddev.yaml
+/config/config.localdev.yaml
 go.sum

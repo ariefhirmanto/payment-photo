@@ -4,7 +4,7 @@ services:
     container_name: payment_service
     build: .
     ports:
-      - 8080:8080
+      - 127.0.0.1:8080:8080
     restart: on-failure
     volumes:
       - .:/app
@@ -15,7 +15,7 @@ services:
   db:
     image: mysql:5.7
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_USER: "photobooth"

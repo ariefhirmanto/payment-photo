@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"payment/models"
 	"payment/payments"
 	"payment/transactions"
@@ -37,6 +38,7 @@ func (u *transactionUsecase) CreateTransaction(input transactions.InputTransacti
 	}
 
 	paymentURL, err := u.PaymentUC.GetQRCode(paymentTransaction)
+	fmt.Printf("%+v\n", paymentURL)
 	if err != nil {
 		return newTransaction, err
 	}

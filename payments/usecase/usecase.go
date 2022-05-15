@@ -44,8 +44,9 @@ func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.C
 	chargeReq := &coreapi.ChargeReq{
 		PaymentType: paymentType,
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  strconv.Itoa(int(input.ID)),
-			GrossAmt: 30000,
+			OrderID: strconv.Itoa(int(input.ID)),
+			// GrossAmt: 30000,
+			GrossAmt: input.Amount,
 		},
 	}
 
