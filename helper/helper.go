@@ -1,6 +1,11 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"fmt"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
+)
 
 type Response struct {
 	Meta Meta        `json:"meta"`
@@ -36,4 +41,11 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors
+}
+
+func GenerateUUID() string {
+	id := uuid.New()
+	fmt.Println(id.String())
+
+	return id.String()
 }

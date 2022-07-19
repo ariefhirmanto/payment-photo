@@ -12,6 +12,10 @@ type InputTransactionID struct {
 	ID int64 `uri:"id" binding:"required"`
 }
 
+type InputTransactionTrxID struct {
+	TrxID string `uri:"trx_id" binding:"required"`
+}
+
 type TransactionNotificationInput struct {
 	TransactionStatus string `json:"transaction_status"`
 	OrderID           string `json:"order_id"`

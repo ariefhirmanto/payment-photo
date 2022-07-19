@@ -14,6 +14,7 @@ func RegisterHTTPEndpoints(router *gin.Engine, uc transactions.Usecase) {
 	{
 		transactionEndpoints.POST("/", h.CreateTransaction)
 		transactionEndpoints.GET("/:id", h.GetTransactionByID)
+		transactionEndpoints.GET("/trx/:trx_id", h.GetTransactionByTrxID)
 		transactionEndpoints.POST("/notification", h.GetNotification)
 	}
 }

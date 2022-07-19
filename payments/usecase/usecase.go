@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"payment/models"
 	"strconv"
 
@@ -44,13 +45,16 @@ func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.C
 	chargeReq := &coreapi.ChargeReq{
 		PaymentType: paymentType,
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID: strconv.Itoa(int(input.ID)),
+			OrderID: input.TrxID,
 			// GrossAmt: 30000,
 			GrossAmt: input.Amount,
 		},
 	}
 
 	res, err := p.coreapi.ChargeTransaction(chargeReq)
+	fmt.Printf("%+v\n", chargeReq)
+	fmt.Printf("%+v\n", res)
+	fmt.Printf("%+v\n", err)
 	if err != nil {
 		return res, err
 	}

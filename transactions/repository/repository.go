@@ -44,3 +44,16 @@ func (r *transactionRepository) GetByID(ID int64) (models.Transaction, error) {
 
 	return transaction, nil
 }
+
+func (r *transactionRepository) GetByTrxID(TrxID string) (models.Transaction, error) {
+	var transaction models.Transaction
+	// with index
+	// err := r.TransactionDB.Clauses(hints.UseIndex("idx_status")).Where("trx_id = ?", TrxID).Find(&transaction).Error
+	// without indexing
+	err := r.TransactionDB.Where("trx_id = ?", TrxID).Find(&transaction).Error
+	if err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
+}

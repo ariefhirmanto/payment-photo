@@ -7,6 +7,7 @@ type TransactionFormatter struct {
 	Amount    int64  `json:"amount"`
 	Status    string `json:"status"`
 	QRCodeURL string `json:"qr_code"`
+	UUID      string `json:"trx_id"`
 }
 
 func FormatTransaction(transaction models.Transaction) TransactionFormatter {
@@ -15,5 +16,6 @@ func FormatTransaction(transaction models.Transaction) TransactionFormatter {
 	formatter.Amount = transaction.Amount
 	formatter.Status = transaction.Status
 	formatter.QRCodeURL = transaction.QRCodeURL
+	formatter.UUID = transaction.TrxId
 	return formatter
 }

@@ -8,11 +8,15 @@ import (
 	"os/signal"
 	"time"
 
+	"payment/auth"
 	"payment/config"
 	paymentUsecase "payment/payments/usecase"
 	transactionController "payment/transactions/controller"
 	transactionRepo "payment/transactions/repository"
 	transactionUsecase "payment/transactions/usecase"
+	userController "payment/users/controller"
+	userRepository "payment/users/repository"
+	userUsecase "payment/users/usecase"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -37,13 +41,21 @@ func (s *Server) Run() error {
 
 	// Initialize repository
 	transactionRepo := transactionRepo.NewTransactionRepository(s.db)
+	userRepository := userRepository.NewUserRepository(s.db)
 	// initialize usecase
+	authService := auth.NewService()
 	paymentUC := paymentUsecase.NewPaymentMidtrans(s.cfg.Midtrans.ClientKey, s.cfg.Midtrans.ServerKey, s.cfg.Midtrans.APIEnv)
 	transactionUC := transactionUsecase.NewTransactionUsecase(transactionRepo, paymentUC)
+	userUC := userUsecase.NewUserUsecase(userRepository)
 	// initialize router
 	transactionController.RegisterHTTPEndpoints(router, transactionUC)
+	userController.RegisterHTTPEndpoints(router, userUC, authService)
+	// quick fix using middleware, initialize transaction Controller
+	transactionController := transactionController.NewTransactionControllers(transactionUC)
+	api := router.Group("api/v1")
+	api.POST("/transaction/bypass", authMiddleware(authService, userUC), transactionController.BypassNormalFlow)
 
-	address := ":8080"
+	address := ":9000"
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        router,

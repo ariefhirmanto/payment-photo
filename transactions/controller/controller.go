@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -74,6 +75,64 @@ func (t *transactionController) GetTransactionByID(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+func (t *transactionController) BypassNormalFlow(c *gin.Context) {
+	var input transactions.InputTransactionRequest
+	err := c.ShouldBindJSON(&input)
+	fmt.Printf("%+v\n", err)
+	if err != nil {
+		errors := helper.FormatValidationError((err))
+		errorMessage := gin.H{"errors": errors}
+		response := helper.APIResponse(
+			"Create transaction failed",
+			http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	// input.ID = uuid.New().String()
+	newTransaction, err := t.transactionUC.CreateTransactionWithoutQRCode(input)
+	if err != nil {
+		response := helper.APIResponse(
+			"Create transaction failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := transactions.FormatTransaction(newTransaction)
+	response := helper.APIResponse(
+		"Success create transaction",
+		http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}
+
+func (t *transactionController) GetTransactionByTrxID(c *gin.Context) {
+	var input transactions.InputTransactionTrxID
+	err := c.ShouldBindUri(&input)
+	if err != nil {
+		response := helper.APIResponse(
+			"Get transaction by Trx ID failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	transaction, err := t.transactionUC.FindByTrxID(input)
+	if err != nil {
+		response := helper.APIResponse(
+			"Get transaction by Trx ID failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := transactions.FormatTransaction(transaction)
+	response := helper.APIResponse(
+		"Success get data transaction by Trx ID",
+		http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}
+
 func (t *transactionController) GetNotification(c *gin.Context) {
 	var input transactions.TransactionNotificationInput
 
@@ -89,6 +148,7 @@ func (t *transactionController) GetNotification(c *gin.Context) {
 	}
 
 	err = t.transactionUC.ProcessPayment(input)
+	fmt.Printf("%+v\n", err)
 	if err != nil {
 		errors := helper.FormatValidationError((err))
 		errorMessage := gin.H{"errors": errors}
