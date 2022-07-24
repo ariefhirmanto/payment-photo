@@ -8,4 +8,5 @@ type Usecase interface {
 	FindByID(input InputTransactionID) (models.Transaction, error)
 	FindByTrxID(input InputTransactionTrxID) (models.Transaction, error)
 	ProcessPayment(input TransactionNotificationInput) error
+	ProcessPaymentV2(input TransactionNotificationInput) error
 }

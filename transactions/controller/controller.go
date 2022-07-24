@@ -161,3 +161,32 @@ func (t *transactionController) GetNotification(c *gin.Context) {
 
 	c.JSON(http.StatusOK, input)
 }
+
+func (t *transactionController) GetNotificationV2(c *gin.Context) {
+	var input transactions.TransactionNotificationInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError((err))
+		errorMessage := gin.H{"errors": errors}
+		response := helper.APIResponse(
+			"Failed to process notification",
+			http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	err = t.transactionUC.ProcessPaymentV2(input)
+	fmt.Printf("%+v\n", err)
+	if err != nil {
+		errors := helper.FormatValidationError((err))
+		errorMessage := gin.H{"errors": errors}
+		response := helper.APIResponse(
+			"Failed to process notification",
+			http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	c.JSON(http.StatusOK, input)
+}
