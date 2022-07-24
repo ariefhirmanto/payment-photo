@@ -1,7 +1,7 @@
 version: '3.3'
 services:
-  app:
-    container_name: payment_service
+  app_dev:
+    container_name: payment_service_dev
     build: .
     ports:
       - 127.0.0.1:8000:8000
@@ -9,10 +9,10 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - db_dev
     links:
-      - db
-  db:
+      - db_dev
+  db_dev:
     image: mysql:5.7
     ports:
       - "127.0.0.1:3305:3305"
