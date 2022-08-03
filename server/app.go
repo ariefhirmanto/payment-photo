@@ -55,7 +55,7 @@ func (s *Server) Run() error {
 	api := router.Group("api/v1")
 	api.POST("/transaction/bypass", authMiddleware(authService, userUC), transactionController.BypassNormalFlow)
 
-	address := ":9000"
+	address := ":8080"
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        router,

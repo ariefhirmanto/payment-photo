@@ -17,6 +17,5 @@ func RegisterHTTPEndpoints(router *gin.Engine, uc transactions.Usecase) {
 		transactionEndpoints.GET("/trx/:trx_id", h.GetTransactionByTrxID)
 		transactionEndpoints.POST("/trx/notification", h.GetNotificationV2)
 		transactionEndpoints.POST("/notification", h.GetNotification)
-		transactionEndpoints.POST("/bypass", h.BypassNormalFlow)
 	}
 }
