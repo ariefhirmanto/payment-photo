@@ -13,7 +13,6 @@ func RegisterHTTPEndpoints(router *gin.Engine, uc users.Usecase, auth auth.Servi
 	transactionEndpoints := router.Group("/api/v1/admin")
 
 	{
-		transactionEndpoints.POST("/", h.RegisterUser)
 		transactionEndpoints.POST("/login", h.Login)
 	}
 }
