@@ -28,3 +28,15 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type PromoCode struct {
+	ID         int64
+	Code       string
+	Discount   int64
+	Counter    int64
+	Limited    bool
+	Available  bool
+	ExpiryDate time.Time
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}

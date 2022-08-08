@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -78,8 +79,8 @@ func (t *transactionController) GetTransactionByID(c *gin.Context) {
 func (t *transactionController) BypassNormalFlow(c *gin.Context) {
 	var input transactions.InputTransactionRequest
 	err := c.ShouldBindJSON(&input)
-	fmt.Printf("%+v\n", err)
 	if err != nil {
+		log.Printf("[Transactions][Controller][CreateTransaction] Error unmarshal creating transaction %+v", err)
 		errors := helper.FormatValidationError((err))
 		errorMessage := gin.H{"errors": errors}
 		response := helper.APIResponse(
@@ -177,7 +178,6 @@ func (t *transactionController) GetNotificationV2(c *gin.Context) {
 	}
 
 	err = t.transactionUC.ProcessPaymentV2(input)
-	fmt.Printf("%+v\n", err)
 	if err != nil {
 		errors := helper.FormatValidationError((err))
 		errorMessage := gin.H{"errors": errors}

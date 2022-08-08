@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"fmt"
+	"log"
 	"payment/models"
 	"strconv"
 
@@ -35,6 +35,7 @@ func NewPaymentMidtrans(clientKey string, serverKey string, env string) *payment
 }
 
 func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.ChargeResponse, error) {
+	log.Printf("[Payments][Usecase][GetQRCode] Get transaction QR Code")
 	paymentType := coreapi.PaymentTypeQris
 	if input.PaymentType == 1 {
 		paymentType = coreapi.PaymentTypeGopay
@@ -50,15 +51,16 @@ func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.C
 			GrossAmt: input.Amount,
 		},
 	}
+	log.Printf("[Payments][Usecase][GetQRCode] Request charge transaction QRCode %+v", chargeReq)
 
 	res, err := p.coreapi.ChargeTransaction(chargeReq)
-	fmt.Printf("%+v\n", chargeReq)
-	fmt.Printf("%+v\n", res)
-	fmt.Printf("%+v\n", err)
+	log.Printf("[Payments][Usecase][GetQRCode] Get response charge transaction QR Code %+v", res)
 	if err != nil {
+		log.Printf("[Payments][Usecase][GetQRCode] Error get QRCode charge transaction with err %+v", err)
 		return res, err
 	}
 
+	log.Printf("[Payments][Usecase][GetQRCode] Success create QR Code")
 	return res, nil
 }
 

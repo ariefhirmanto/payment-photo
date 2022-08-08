@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"fmt"
+	"log"
 	"payment/helper"
 	"payment/models"
 	"payment/payments"
@@ -40,10 +40,11 @@ func (u *transactionUsecase) CreateTransaction(input transactions.InputTransacti
 		TrxID:       newTransaction.TrxId,
 	}
 
-	fmt.Printf("%+v\n", paymentTransaction)
+	log.Printf("[Transactions][Usecase][CreateTransaction] Get payment transaction %+v", paymentTransaction)
 	paymentURL, err := u.PaymentUC.GetQRCode(paymentTransaction)
-	fmt.Printf("%+v\n", paymentURL)
+	log.Printf("[Transactions][Usecase][CreateTransaction] Get payment transaction QR Code URL %+v", paymentURL)
 	if err != nil {
+		log.Printf("[Transactions][Usecase][CreateTransaction] Error get QRCode %+v", err)
 		return newTransaction, err
 	}
 
@@ -60,6 +61,7 @@ func (u *transactionUsecase) CreateTransaction(input transactions.InputTransacti
 	return newTransaction, nil
 }
 
+// deprecated
 func (u *transactionUsecase) FindByID(input transactions.InputTransactionID) (models.Transaction, error) {
 	transaction, err := u.TransactionRepo.GetByID(input.ID)
 	if err != nil {
@@ -75,19 +77,22 @@ func (u *transactionUsecase) CreateTransactionWithoutQRCode(input transactions.I
 	transaction.Status = "paid"
 	transaction.PaymentType = 99
 	transaction.TrxId = helper.GenerateUUID()
+	log.Printf("[Transactions][Usecase][CreateTransactionWithoutQRCode] Bypass payment with input %+v", input)
 
 	newTransaction, err := u.TransactionRepo.CreateTransaction(transaction)
 	if err != nil {
+		log.Printf("[Transactions][Usecase][CreateTransactionWithoutQRCode] Error get transactions with err %+v", err)
 		return newTransaction, err
 	}
-	fmt.Printf("%+v\n", newTransaction)
 
+	log.Printf("[Transactions][Usecase][CreateTransactionWithoutQRCode] Success create %+v", newTransaction)
 	return newTransaction, nil
 }
 
 func (u *transactionUsecase) FindByTrxID(input transactions.InputTransactionTrxID) (models.Transaction, error) {
 	transaction, err := u.TransactionRepo.GetByTrxID(input.TrxID)
 	if err != nil {
+		log.Printf("[Transactions][Usecase][FindByTrxID] Error get transactions with trx id %+v", input.TrxID)
 		return transaction, err
 	}
 
@@ -119,10 +124,12 @@ func (u *transactionUsecase) ProcessPayment(input transactions.TransactionNotifi
 }
 
 func (u *transactionUsecase) ProcessPaymentV2(input transactions.TransactionNotificationInput) error {
+	log.Printf("[Transactions][Usecase][ProcessPaymentV2] Get callback from Midtrans")
 	transaction_id := input.OrderID
 
 	transaction, err := u.TransactionRepo.GetByTrxID(transaction_id)
 	if err != nil {
+		log.Printf("[Transactions][Usecase][ProcessPaymentV2] Error get transactions with trx id %+v", input.OrderID)
 		return err
 	}
 
@@ -139,5 +146,6 @@ func (u *transactionUsecase) ProcessPaymentV2(input transactions.TransactionNoti
 		return err
 	}
 
+	log.Printf("[Transactions][Usecase][ProcessPaymentV2] Success processed callback")
 	return nil
 }

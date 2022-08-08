@@ -11,6 +11,9 @@ import (
 	"payment/auth"
 	"payment/config"
 	paymentUsecase "payment/payments/usecase"
+	promoController "payment/promo/controller"
+	promoRepository "payment/promo/repository"
+	promoUsecase "payment/promo/usecase"
 	transactionController "payment/transactions/controller"
 	transactionRepo "payment/transactions/repository"
 	transactionUsecase "payment/transactions/usecase"
@@ -42,20 +45,25 @@ func (s *Server) Run() error {
 	// Initialize repository
 	transactionRepo := transactionRepo.NewTransactionRepository(s.db)
 	userRepository := userRepository.NewUserRepository(s.db)
+	promoRepository := promoRepository.NewPromoRepository(s.db)
 	// initialize usecase
 	authService := auth.NewService()
 	paymentUC := paymentUsecase.NewPaymentMidtrans(s.cfg.Midtrans.ClientKey, s.cfg.Midtrans.ServerKey, s.cfg.Midtrans.APIEnv)
 	transactionUC := transactionUsecase.NewTransactionUsecase(transactionRepo, paymentUC)
 	userUC := userUsecase.NewUserUsecase(userRepository)
+	promoUC := promoUsecase.NewPromoUsecase(promoRepository)
 	// initialize router
 	transactionController.RegisterHTTPEndpoints(router, transactionUC)
 	userController.RegisterHTTPEndpoints(router, userUC, authService)
+	promoController.RegisterHTTPEndpoints(router, promoUC)
 	// quick fix using middleware, initialize transaction Controller
 	transactionController := transactionController.NewTransactionControllers(transactionUC)
+	promoController := promoController.NewPromoController(promoUC)
 	api := router.Group("api/v1")
 	api.POST("/transaction/bypass", authMiddleware(authService, userUC), transactionController.BypassNormalFlow)
+	api.POST("/promo", authMiddleware(authService, userUC), promoController.CreatePromoCode)
 
-	address := ":8080"
+	address := ":9000"
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        router,

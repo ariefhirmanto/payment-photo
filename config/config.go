@@ -29,7 +29,7 @@ func LoadConfig() (config MainConfig) {
 	_viper.AddConfigPath("/app/config")
 	_viper.AddConfigPath("./config")
 	_viper.SetConfigType("yaml")
-	_viper.SetConfigName("config.prod") // read .yaml config
+	_viper.SetConfigName("config.localdev") // read .yaml config
 	err := _viper.ReadInConfig()
 	if err != nil {
 		log.Fatal(err)
