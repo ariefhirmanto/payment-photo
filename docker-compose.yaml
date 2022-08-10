@@ -15,7 +15,7 @@ services:
   db_dev:
     image: mysql:5.7
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:3305:3305"
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_USER: "photobooth"
