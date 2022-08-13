@@ -36,6 +36,7 @@ type PromoCode struct {
 	Counter    int64
 	Limited    bool
 	Available  bool
+	Duration   int
 	ExpiryDate time.Time
 	CreatedAt  time.Time
 	UpdatedAt  time.Time

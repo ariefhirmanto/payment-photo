@@ -1,0 +1,30 @@
+{{ define "content" }}
+
+<h2 class="mb-4">Activate</h2>
+
+{{ if .Error }}
+<div class="alert alert-danger">
+    {{ .Error }}
+</div>
+{{ end }}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="/promo/update/status/{{ .ID }}" method="POST">
+            <div class="form-group">
+                <label for="available">Action Promo</label>
+                <select name="available" class="form-control">
+                    <option value="">-- Ganti status promo? --</option>
+                        <option value="{{ true }}" selected>Aktif</option>
+                        <option value="{{ false }}">Tidak Aktif</option>
+                </select>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{ end }}

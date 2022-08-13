@@ -56,3 +56,22 @@ func (r *promoRepository) GetByPromoCode(code string) (models.PromoCode, error) 
 
 	return promoCode, nil
 }
+
+func (r *promoRepository) GetAll() ([]models.PromoCode, error) {
+	var promos []models.PromoCode
+
+	err := r.promoDB.Find(&promos).Error
+	if err != nil {
+		return promos, err
+	}
+
+	return promos, nil
+}
+
+func (r *promoRepository) Update(input models.PromoCode) (models.PromoCode, error) {
+	err := r.promoDB.Save(&input).Error
+	if err != nil {
+		return input, err
+	}
+	return input, nil
+}

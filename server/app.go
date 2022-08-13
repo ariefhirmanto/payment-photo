@@ -20,7 +20,10 @@ import (
 	userController "payment/users/controller"
 	userRepository "payment/users/repository"
 	userUsecase "payment/users/usecase"
+	webHandler "payment/web/handler"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -41,7 +44,14 @@ func NewServer(cfg *config.MainConfig, db *gorm.DB) *Server {
 func (s *Server) Run() error {
 	router := gin.Default()
 	router.Use(CORSMiddleware())
-
+	router.Use(CORSMiddleware())
+	cookieStore := cookie.NewStore([]byte(auth.SECRET_KEY))
+	router.Use(sessions.Sessions("startup", cookieStore))
+	router.HTMLRender = loadTemplates("./web/templates")
+	router.Static("/images", "./images")
+	router.Static("/css", "./web/assets/css")
+	router.Static("/js", "./web/assets/js")
+	router.Static("/webfonts", "./web/assets/webfonts")
 	// Initialize repository
 	transactionRepo := transactionRepo.NewTransactionRepository(s.db)
 	userRepository := userRepository.NewUserRepository(s.db)
@@ -62,6 +72,21 @@ func (s *Server) Run() error {
 	api := router.Group("api/v1")
 	api.POST("/transaction/bypass", authMiddleware(authService, userUC), transactionController.BypassNormalFlow)
 	api.POST("/promo", authMiddleware(authService, userUC), promoController.CreatePromoCode)
+
+	// Web Handler
+	promoWebHandler := webHandler.NewPromoHandler(promoUC, userUC)
+	sessionHandler := webHandler.NewSessionHandler(userUC)
+	// Dashboard Promo Router
+	router.GET("/login", sessionHandler.New)
+	router.POST("/session", sessionHandler.Create)
+	router.GET("/logout", sessionHandler.Destroy)
+	router.GET("/promo", authAdminMiddleware(), promoWebHandler.Index)
+	router.GET("/promo/new", authAdminMiddleware(), promoWebHandler.New)
+	router.POST("/promo", authAdminMiddleware(), promoWebHandler.Create)
+	router.GET("/promo/status/:id", authAdminMiddleware(), promoWebHandler.ActivatePage)
+	router.POST("/promo/update/status/:id", authAdminMiddleware(), promoWebHandler.ActivationAction)
+	router.GET("/promo/edit/:id", authAdminMiddleware(), promoWebHandler.Edit)
+	router.POST("/promo/update/:id", authAdminMiddleware(), promoWebHandler.Update)
 
 	address := ":9000"
 	s.httpServer = &http.Server{

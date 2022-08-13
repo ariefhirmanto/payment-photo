@@ -1,0 +1,59 @@
+{{ define "content" }}
+
+<h2 class="mb-4">New Promo Code</h2>
+
+{{ if .Error }}
+<div class="alert alert-danger">
+    {{ .Error }}
+</div>
+{{ end }}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="/promo" method="POST">
+            <div class="form-group">
+                <label for="code">Promo Code</label>
+                <input type="text" name="promo_code" placeholder="Masukkan Promo Code" required class="form-control" value="{{ .Code }}">
+            </div>
+
+            <div class="form-group">
+                <label for="discount">Nominal Diskon</label>
+                <input type="number" name="discount_amount" placeholder="Masukkan nominal diskon" required class="form-control" value="{{ .Discount }}">
+            </div>
+
+            <div class="form-group">
+                <label for="limited">Promo Terbatas</label>
+                <select name="is_limited" class="form-control">
+                    <option value="">-- Apakah promo terbatas? --</option>
+                        <option value="{{ true }}" selected>Ya</option>
+                        <option value="{{ false }}">Tidak</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="counter">Jumlah Promo</label>
+                <input type="number" name="counter" placeholder="Masukkan jumlah promo" required class="form-control" value="{{ .Counter }}">
+            </div>
+
+            <div class="form-group">
+                <label for="available">Promo Langsung Aktif</label>
+                <select name="available" class="form-control">
+                    <option value="">-- Apakah promo langsung diaktifkan? --</option>
+                        <option value="{{ true }}" selected>Ya</option>
+                        <option value="{{ false }}">Tidak</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duration">Durasi Promo (dalam hari)</label>
+                <input type="number" name="duration" placeholder="Masukkan durasi promo tetap aktif" required class="form-control" value="{{ .Duration }}">
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{ end }}

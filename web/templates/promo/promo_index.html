@@ -1,0 +1,49 @@
+{{ define "content" }}
+
+<h2 class="mb-4">List of Promo</h2>
+
+<a href="/promo/new" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> New Promo</a>
+
+{{ if .Error }}
+<div class="alert alert-danger">
+    {{ .Error }}
+</div>
+{{ end }}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <table class="table mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Promo Code</th>
+                    <th>Nominal Diskon</th>
+                    <th>Jumlah Promo</th>
+                    <th>Promo Terbatas</th>
+                    <th>Promo Tersedia</th>
+                    <th>Expiry Date</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .promos }}
+                <tr>
+                    <td>{{ .ID }}</td>
+                    <td>{{ .Code }}</td>
+                    <td>{{ .Discount }}</td>
+                    <td>{{ .Counter }}</td>
+                    <td>{{ .Limited }}</td>
+                    <td>{{ .Available }}</td>
+                    <td>{{ .ExpiryDate }}</td>
+                    <td><a href="/promo/edit/{{ .ID }}"><i class="fa fa-edit"></i><a></td>
+                    <td><a href="/promo/status/{{ .ID }}"><i class="fa fa-edit"></i><a></td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{ end }}

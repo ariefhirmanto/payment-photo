@@ -1,13 +1,17 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
+	"path/filepath"
 	"payment/auth"
 	"payment/helper"
 	"payment/users"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -64,5 +68,42 @@ func authMiddleware(authService auth.Service, userUsecase users.Usecase) gin.Han
 			return
 		}
 		c.Set("currentUser", user)
+	}
+}
+
+func loadTemplates(templatesDir string) multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+
+	layouts, err := filepath.Glob(templatesDir + "/layouts/*")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	includes, err := filepath.Glob(templatesDir + "/**/*")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for _, include := range includes {
+		layoutCopy := make([]string, len(layouts))
+		copy(layoutCopy, layouts)
+		files := append(layoutCopy, include)
+		r.AddFromFiles(filepath.Base(include), files...)
+	}
+	return r
+}
+
+func authAdminMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+
+		userIDSession := session.Get("userID")
+		fmt.Printf("%+v\n", userIDSession)
+
+		if userIDSession == nil {
+			fmt.Printf("%+v\n", userIDSession)
+			c.Redirect(http.StatusFound, "/login")
+			return
+		}
 	}
 }

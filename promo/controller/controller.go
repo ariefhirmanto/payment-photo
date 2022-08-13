@@ -19,7 +19,7 @@ func NewPromoController(promoUC promo.Usecase) *promoController {
 }
 
 func (t *promoController) CreatePromoCode(c *gin.Context) {
-	var input promo.InputPromoCodeRequest
+	var input promo.FormPromoCodeRequest
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		errors := helper.FormatValidationError((err))
