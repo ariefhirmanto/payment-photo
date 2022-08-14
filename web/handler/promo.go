@@ -48,7 +48,7 @@ func (h *promoHandler) Create(c *gin.Context) {
 	promoCodeInput := promo.FormPromoCodeRequest{}
 	promoCodeInput.Code = input.Code
 	promoCodeInput.Discount = input.Discount
-	promoCodeInput.Available = input.Available
+	promoCodeInput.Available = false
 	promoCodeInput.Counter = input.Counter
 	promoCodeInput.Limited = input.Limited
 	promoCodeInput.Duration = input.Duration
@@ -78,6 +78,7 @@ func (h *promoHandler) Edit(c *gin.Context) {
 	input.Discount = existingPromo.Discount
 	input.Counter = existingPromo.Counter
 	input.Limited = existingPromo.Limited
+	input.Available = existingPromo.Available
 	input.Duration = 0
 	// input.ExpiryDate = existingPromo.ExpiryDate
 
@@ -104,6 +105,7 @@ func (h *promoHandler) Update(c *gin.Context) {
 	updateInput.Discount = input.Discount
 	updateInput.Counter = input.Counter
 	updateInput.Limited = input.Limited
+	updateInput.Available = input.Available
 	// updateInput.ExpiryDate = input.ExpiryDate
 
 	_, err = h.promoUC.UpdatePromoCode(promo.InputPromoCodeID{ID: int64(id)}, updateInput)

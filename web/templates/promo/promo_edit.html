@@ -36,15 +36,6 @@
             </div>
 
             <div class="form-group">
-                <label for="available">Promo Langsung Aktif</label>
-                <select name="available" class="form-control">
-                    <option value="">-- Apakah promo langsung diaktifkan? --</option>
-                        <option value="{{ true }}" selected>Ya</option>
-                        <option value="{{ false }}">Tidak</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label for="duration">Durasi Promo (dalam hari)</label>
                 <input type="number" name="duration" placeholder="Masukkan durasi promo tetap aktif" required class="form-control" value="{{ .Duration }}">
             </div>

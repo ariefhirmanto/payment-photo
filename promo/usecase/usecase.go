@@ -164,6 +164,7 @@ func (u *promoUsecase) UpdatePromoActivation(inputID promo.InputPromoCodeID, inp
 	} else {
 		promo.ExpiryDate = time.Now()
 	}
+
 	newPromo, err := u.PromoRepo.UpdatePromoCode(promo)
 	if err != nil {
 		log.Printf("[Promo][Usecase][DeletePromo] Failed to update promo with ID %+v", inputID.ID)
