@@ -1,21 +1,21 @@
 version: '3.3'
 services:
-  app_dev:
-    container_name: payment_service_dev
+  app:
+    container_name: payment_service
     build: .
     ports:
-      - 127.0.0.1:9000:9000
+      - 127.0.0.1:8080:8080
     restart: on-failure
     volumes:
       - .:/app
     depends_on:
-      - db_dev
+      - db
     links:
-      - db_dev
-  db_dev:
+      - db
+  db:
     image: mysql:5.7
     ports:
-      - "127.0.0.1:3305:3305"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_USER: "photobooth"
