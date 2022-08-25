@@ -18,6 +18,7 @@ type PaymentTransaction struct {
 	Amount      int64
 	PaymentType int
 	TrxID       string
+	Location    string
 }
 
 type User struct {

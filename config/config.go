@@ -9,6 +9,7 @@ import (
 type MainConfig struct {
 	Database DatabaseConfig
 	Midtrans PaymentConfig
+	Server   ServerConfig
 }
 
 type DatabaseConfig struct {
@@ -25,16 +26,21 @@ type PaymentConfig struct {
 	APIEnv    string
 }
 
+type ServerConfig struct {
+	Port string
+}
+
 func LoadConfig() (config MainConfig) {
 	_viper.AddConfigPath("/app/config")
 	_viper.AddConfigPath("./config")
 	_viper.SetConfigType("yaml")
-	_viper.SetConfigName("config.prod") // read .yaml config
+	_viper.SetConfigName("config.local") // read .yaml config
 	err := _viper.ReadInConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 	_viper.UnmarshalKey("Database", &config.Database)
 	_viper.UnmarshalKey("Midtrans", &config.Midtrans)
+	_viper.UnmarshalKey("Server", &config.Server)
 	return
 }

@@ -38,6 +38,7 @@ func (u *transactionUsecase) CreateTransaction(input transactions.InputTransacti
 		Amount:      newTransaction.Amount,
 		PaymentType: newTransaction.PaymentType,
 		TrxID:       newTransaction.TrxId,
+		Location:    input.Location,
 	}
 
 	log.Printf("[Transactions][Usecase][CreateTransaction] Get payment transaction %+v", paymentTransaction)

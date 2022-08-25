@@ -50,6 +50,7 @@ func (p *paymentMidtrans) GetQRCode(input models.PaymentTransaction) (*coreapi.C
 			// GrossAmt: 30000,
 			GrossAmt: input.Amount,
 		},
+		CustomField1: &input.Location,
 	}
 	log.Printf("[Payments][Usecase][GetQRCode] Request charge transaction QRCode %+v", chargeReq)
 

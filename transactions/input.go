@@ -1,9 +1,10 @@
 package transactions
 
 type InputTransactionRequest struct {
-	ID          int64 `json:"id"`
-	Amount      int64 `json:"amount" binding:"required"`
-	PaymentType int   `json:"payment_type"`
+	ID          int64  `json:"id"`
+	Amount      int64  `json:"amount" binding:"required"`
+	PaymentType int    `json:"payment_type"`
+	Location    string `json:"location" binding:"required"`
 }
 
 type InputTransactionID struct {

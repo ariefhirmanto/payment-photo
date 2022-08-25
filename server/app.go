@@ -88,7 +88,7 @@ func (s *Server) Run() error {
 	router.GET("/promo/edit/:id", authAdminMiddleware(), promoWebHandler.Edit)
 	router.POST("/promo/update/:id", authAdminMiddleware(), promoWebHandler.Update)
 
-	address := ":8080"
+	address := s.cfg.Server.Port
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        router,
