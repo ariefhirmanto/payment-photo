@@ -4,7 +4,7 @@ type InputTransactionRequest struct {
 	ID          int64  `json:"id"`
 	Amount      int64  `json:"amount" binding:"required"`
 	PaymentType int    `json:"payment_type"`
-	Location    string `json:"location" binding:"required"`
+	Location    string `json:"location"`
 }
 
 type InputTransactionID struct {

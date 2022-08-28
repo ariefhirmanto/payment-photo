@@ -33,12 +33,17 @@ func (u *transactionUsecase) CreateTransaction(input transactions.InputTransacti
 		return newTransaction, err
 	}
 
+	inputLocation := "Onni"
+	if input.Location != "" {
+		inputLocation = input.Location
+	}
+
 	paymentTransaction := models.PaymentTransaction{
 		ID:          newTransaction.ID,
 		Amount:      newTransaction.Amount,
 		PaymentType: newTransaction.PaymentType,
 		TrxID:       newTransaction.TrxId,
-		Location:    input.Location,
+		Location:    inputLocation,
 	}
 
 	log.Printf("[Transactions][Usecase][CreateTransaction] Get payment transaction %+v", paymentTransaction)
