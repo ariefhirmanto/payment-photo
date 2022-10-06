@@ -79,7 +79,7 @@ func (h *promoHandler) Edit(c *gin.Context) {
 	input.Counter = existingPromo.Counter
 	input.Limited = existingPromo.Limited
 	input.Available = existingPromo.Available
-	input.Duration = 0
+	input.Duration = existingPromo.Duration
 	// input.ExpiryDate = existingPromo.ExpiryDate
 
 	c.HTML(http.StatusOK, "promo_edit.html", input)
@@ -106,6 +106,7 @@ func (h *promoHandler) Update(c *gin.Context) {
 	updateInput.Counter = input.Counter
 	updateInput.Limited = input.Limited
 	updateInput.Available = input.Available
+	updateInput.Duration = input.Duration
 	// updateInput.ExpiryDate = input.ExpiryDate
 
 	_, err = h.promoUC.UpdatePromoCode(promo.InputPromoCodeID{ID: int64(id)}, updateInput)
