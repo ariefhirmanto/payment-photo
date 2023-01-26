@@ -10,6 +10,7 @@ type MainConfig struct {
 	Database DatabaseConfig
 	Midtrans PaymentConfig
 	Server   ServerConfig
+	Product  ProductConfig
 }
 
 type DatabaseConfig struct {
@@ -30,6 +31,11 @@ type ServerConfig struct {
 	Port string
 }
 
+type ProductConfig struct {
+	LocalEvent  bool
+	AdminSwitch bool
+}
+
 func LoadConfig() (config MainConfig) {
 	_viper.AddConfigPath("/app/config")
 	_viper.AddConfigPath("./config")
@@ -42,5 +48,6 @@ func LoadConfig() (config MainConfig) {
 	_viper.UnmarshalKey("Database", &config.Database)
 	_viper.UnmarshalKey("Midtrans", &config.Midtrans)
 	_viper.UnmarshalKey("Server", &config.Server)
+	_viper.UnmarshalKey("Product", &config.Product)
 	return
 }

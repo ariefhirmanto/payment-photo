@@ -70,8 +70,8 @@ func (s *Server) Run() error {
 	transactionController := transactionController.NewTransactionControllers(transactionUC)
 	promoController := promoController.NewPromoController(promoUC)
 	api := router.Group("api/v1")
-	api.POST("/transaction/bypass", authMiddleware(authService, userUC), transactionController.BypassNormalFlow)
-	api.POST("/promo", authMiddleware(authService, userUC), promoController.CreatePromoCode)
+	api.POST("/transaction/bypass", authMiddleware(authService, userUC, s.cfg.Product.LocalEvent), transactionController.BypassNormalFlow)
+	api.POST("/promo", authMiddleware(authService, userUC, s.cfg.Product.AdminSwitch), promoController.CreatePromoCode)
 
 	// Web Handler
 	promoWebHandler := webHandler.NewPromoHandler(promoUC, userUC)
