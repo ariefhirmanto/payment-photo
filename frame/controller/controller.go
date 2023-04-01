@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"payment/frame"
 	category "payment/frame_category"
 	"payment/helper"
@@ -53,8 +55,9 @@ func (h *frameController) UploadImage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-
-	path := fmt.Sprintf("images/%s/%s", category.Name, file.Filename)
+	
+	parentDirectory := getDirectory()
+	path := fmt.Sprintf(parentDirectory + "images/%s/%s", category.Name, file.Filename)
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		errorMessage := gin.H{"is_uploaded": false}
@@ -187,4 +190,13 @@ func (h *frameController) GetFrameByLocation(c *gin.Context) {
 		"Success get data promo code",
 		http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
+}
+
+func getDirectory() string {
+	wd,err := os.Getwd()
+	if err != nil {
+			panic(err)
+	}
+	parent := filepath.Dir(wd)
+	return parent
 }

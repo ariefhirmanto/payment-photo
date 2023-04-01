@@ -36,7 +36,8 @@ func (u *categoryUsecase) CreateCategory(input category.FormInputCategory) (mode
 		return category, errors.New("category already exists")
 	}
 
-	err := os.Mkdir(filepath.Join("images", input.Name), os.ModePerm)
+	parentDirectory := filepath.Join(getDirectory(), "images")
+	err := os.Mkdir(filepath.Join(parentDirectory, input.Name), os.ModePerm)
 	if err != nil {
 		log.Printf("[Category][Usecase][CreateCategory] Error creating category %+v", err)
 		return category, err
@@ -152,7 +153,8 @@ func (u *categoryUsecase) DeleteCategory(input category.InputCategoryID) error {
 		return err
 	}
 
-	err = os.RemoveAll(filepath.Join("images", category.Name))
+	parentDirectory := filepath.Join(getDirectory(), "images")
+	err = os.RemoveAll(filepath.Join(parentDirectory, category.Name))
 	if err != nil {
 		log.Printf("[Category][Usecase][CreateCategory] Error creating category %+v", err)
 		return err
@@ -166,4 +168,13 @@ func (u *categoryUsecase) DeleteCategory(input category.InputCategoryID) error {
 
 	log.Printf("[Promo][Usecase][DeletePromo] Success delete promo %+v", isSuccess)
 	return nil
+}
+
+func getDirectory() string {
+	wd,err := os.Getwd()
+	if err != nil {
+			panic(err)
+	}
+	parent := filepath.Dir(wd)
+	return parent
 }

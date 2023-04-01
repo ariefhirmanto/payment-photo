@@ -3,6 +3,8 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	frame "payment/frame"
 	category "payment/frame_category"
 	user "payment/users"
@@ -93,7 +95,8 @@ func (h *frameHandler) Create(c *gin.Context) {
 		return
 	}
 
-	path := fmt.Sprintf("images/%s/%s", category.Name, file.Filename)
+	parentDirectory := getDirectory()
+	path := fmt.Sprintf(parentDirectory + "images/%s/%s", category.Name, file.Filename)
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		fmt.Printf("Error save: %+v\n", err)
@@ -167,4 +170,13 @@ func (h *frameHandler) ChangeStatus(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusFound, "/frame")
+}
+
+func getDirectory() string {
+	wd,err := os.Getwd()
+	if err != nil {
+			panic(err)
+	}
+	parent := filepath.Dir(wd)
+	return parent
 }
