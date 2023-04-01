@@ -29,11 +29,13 @@ type PaymentConfig struct {
 
 type ServerConfig struct {
 	Port string
+	Env  string
 }
 
 type ProductConfig struct {
 	LocalEvent  bool
 	AdminSwitch bool
+	BaseUrl     string
 }
 
 func LoadConfig() (config MainConfig) {

@@ -42,3 +42,36 @@ type PromoCode struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
+
+type Frame struct {
+	ID         int64
+	Category   Category
+	CategoryID int64
+	Url        string
+	Name       string
+	Location   string
+	Available  bool
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}
+
+type Category struct {
+	ID              int64
+	Name            string
+	InterRowPadding int64
+	TopFramePadding int64
+	InterColPadding int64
+	CustomPadding   int64
+	ImageID         int64
+	Width           int64
+	Height          int64
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+}
+
+type Location struct {
+	ID        int64
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}

@@ -1,0 +1,61 @@
+{{ define "content" }}
+
+<h2 class="mb-4">Edit Category</h2>
+
+{{ if .Error }}
+<div class="alert alert-danger">
+    {{ .Error }}
+</div>
+{{ end }}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="/category/update/{{ .ID }}" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Masukkan Nama Kategori" required class="form-control" value="{{ .Name }}">
+            </div>
+
+            <div class="form-group">
+                <label for="inter_row_padding">Inter Row Padding</label>
+                <input type="number" name="inter_row_padding" placeholder="Masukkan Config" required class="form-control" value="{{ .InterRowPadding }}">
+            </div>
+
+            <div class="form-group">
+                <label for="top_frame_padding">Top Frame Padding</label>
+                <input type="number" name="top_frame_padding" placeholder="Masukkan Config" required class="form-control" value="{{ .TopFramePadding }}">
+            </div>
+
+            <div class="form-group">
+                <label for="inter_col_padding">Inter Col Padding</label>
+                <input type="number" name="inter_col_padding" placeholder="Masukkan Config" required class="form-control" value="{{ .InterColPadding }}">
+            </div>
+
+            <div class="form-group">
+                <label for="custom_padding">Custom Padding</label>
+                <input type="number" name="custom_padding" placeholder="Masukkan Config" required class="form-control" value="{{ .CustomPadding }}">
+            </div>
+
+            <div class="form-group">
+                <label for="image_id">Image ID</label>
+                <input type="number" name="image_id" placeholder="Masukkan Config" required class="form-control" value="{{ .ImageID }}">
+            </div>
+
+            <div class="form-group">
+                <label for="width">Width</label>
+                <input type="number" name="width" placeholder="Masukkan Config" required class="form-control" value="{{ .Width }}">
+            </div>
+
+            <div class="form-group">
+                <label for="height">Height</label>
+                <input type="number" name="height" placeholder="Masukkan Config" required class="form-control" value="{{ .Height }}">
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{ end }}

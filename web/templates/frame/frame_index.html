@@ -1,0 +1,58 @@
+{{ define "content" }}
+
+<h2 class="mb-4">List of Frame</h2>
+
+<a href="/frame/new" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> New Frame</a>
+
+{{ if .Error }}
+<div class="alert alert-danger">
+    {{ .Error }}
+</div>
+{{ end }}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <table class="table mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Url</th>
+                    <th>Location</th>
+                    <th>Availability (Bisa Dipakai)</th>
+                    <th>Delete</th>
+                    <th>Change Availability</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .frames }}
+                <tr>
+                    <td>{{ .ID }}</td>
+                    <td>{{ .Name }}</td>
+                    <td>{{ .Category.Name }}</td>
+                    <td><a href="{{ .Url }}" target="_blank" rel="noopener noreferrer">{{ .Url }}</a></td>
+                    <td>{{ .Location }}</td>
+                    <td>{{ .Available }}</td>
+                    <td>
+                        <form action="/frame/delete/{{ .ID }}" method="POST">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/frame/change/{{ .ID }}" method="POST">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{ end }}
