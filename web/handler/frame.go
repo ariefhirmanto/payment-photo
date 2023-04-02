@@ -17,10 +17,11 @@ type frameHandler struct {
 	frameUC    frame.Usecase
 	categoryUC category.Usecase
 	userUC     user.Usecase
+	env        string
 }
 
-func NewFrameHandler(frameUC frame.Usecase, userUC user.Usecase, categoryUC category.Usecase) *frameHandler {
-	return &frameHandler{frameUC: frameUC, userUC: userUC, categoryUC: categoryUC}
+func NewFrameHandler(frameUC frame.Usecase, userUC user.Usecase, categoryUC category.Usecase, env string) *frameHandler {
+	return &frameHandler{frameUC: frameUC, userUC: userUC, categoryUC: categoryUC, env: env}
 }
 
 func (h *frameHandler) Index(c *gin.Context) {
@@ -74,11 +75,12 @@ func (h *frameHandler) Create(c *gin.Context) {
 		return
 	}
 
-	categoryInput := frame.FormInputFrame{}
-	categoryInput.Name = input.Name
-	categoryInput.CategoryID = input.CategoryID
-	categoryInput.Location = input.Location
-	fmt.Printf("Category: %+v\n", categoryInput)
+	frameInput := frame.FormInputFrame{}
+	frameInput.Name = input.Name
+	frameInput.CategoryID = input.CategoryID
+	frameInput.Location = input.Location
+	frameInput.Counter = input.Counter
+	fmt.Printf("Category: %+v\n", frameInput)
 
 	category, err := h.categoryUC.FindByIDForFrame(input.CategoryID)
 	if err != nil {
@@ -86,7 +88,7 @@ func (h *frameHandler) Create(c *gin.Context) {
 		c.HTML(http.StatusInternalServerError, "error.html", nil)
 		return
 	}
-	categoryInput.Category = category
+	frameInput.Category = category
 
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -95,8 +97,8 @@ func (h *frameHandler) Create(c *gin.Context) {
 		return
 	}
 
-	parentDirectory := getDirectory()
-	path := fmt.Sprintf(parentDirectory + "images/%s/%s", category.Name, file.Filename)
+	parentDirectory := getDirectory(h.env)
+	path := fmt.Sprintf(parentDirectory+"images/%s/%s", category.Name, file.Filename)
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		fmt.Printf("Error save: %+v\n", err)
@@ -104,7 +106,7 @@ func (h *frameHandler) Create(c *gin.Context) {
 		return
 	}
 
-	_, err = h.frameUC.SaveFrameImage(categoryInput, path)
+	_, err = h.frameUC.SaveFrameImage(frameInput, path)
 	if err != nil {
 		fmt.Printf("Error save frame image: %+v\n", err)
 		c.HTML(http.StatusInternalServerError, "error.html", nil)
@@ -172,11 +174,15 @@ func (h *frameHandler) ChangeStatus(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/frame")
 }
 
-func getDirectory() string {
-	wd,err := os.Getwd()
+func getDirectory(env string) string {
+	wd, err := os.Getwd()
 	if err != nil {
-			panic(err)
+		panic(err)
 	}
-	parent := filepath.Dir(wd)
-	return parent
+	url := ""
+	if env != "local" {
+		url = "/app/" + filepath.Dir(wd) + "/"
+	}
+
+	return url
 }

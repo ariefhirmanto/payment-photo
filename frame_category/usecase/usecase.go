@@ -11,11 +11,13 @@ import (
 
 type categoryUsecase struct {
 	CategoryRepo category.Repository
+	Env          string
 }
 
-func NewCategoryUsecase(repo category.Repository) *categoryUsecase {
+func NewCategoryUsecase(repo category.Repository, env string) *categoryUsecase {
 	return &categoryUsecase{
 		CategoryRepo: repo,
+		Env:          env,
 	}
 }
 
@@ -36,7 +38,7 @@ func (u *categoryUsecase) CreateCategory(input category.FormInputCategory) (mode
 		return category, errors.New("category already exists")
 	}
 
-	parentDirectory := filepath.Join(getDirectory(), "images")
+	parentDirectory := filepath.Join(getDirectory(u.Env), "images")
 	err := os.Mkdir(filepath.Join(parentDirectory, input.Name), os.ModePerm)
 	if err != nil {
 		log.Printf("[Category][Usecase][CreateCategory] Error creating category %+v", err)
@@ -153,7 +155,7 @@ func (u *categoryUsecase) DeleteCategory(input category.InputCategoryID) error {
 		return err
 	}
 
-	parentDirectory := filepath.Join(getDirectory(), "images")
+	parentDirectory := filepath.Join(getDirectory(u.Env), "images")
 	err = os.RemoveAll(filepath.Join(parentDirectory, category.Name))
 	if err != nil {
 		log.Printf("[Category][Usecase][CreateCategory] Error creating category %+v", err)
@@ -170,11 +172,15 @@ func (u *categoryUsecase) DeleteCategory(input category.InputCategoryID) error {
 	return nil
 }
 
-func getDirectory() string {
-	wd,err := os.Getwd()
+func getDirectory(env string) string {
+	wd, err := os.Getwd()
 	if err != nil {
-			panic(err)
+		panic(err)
 	}
-	parent := filepath.Dir(wd)
-	return parent
+	url := filepath.Dir(wd)
+	if env != "local" {
+		url = "/app/" + filepath.Dir(wd)
+	}
+
+	return url
 }

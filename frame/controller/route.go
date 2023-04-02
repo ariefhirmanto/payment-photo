@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterHTTPEndpoints(router *gin.Engine, uc frame.Usecase, categoryUC category.Usecase) {
-	h := NewFrameController(uc, categoryUC)
+func RegisterHTTPEndpoints(router *gin.Engine, uc frame.Usecase, categoryUC category.Usecase, env string) {
+	h := NewFrameController(uc, categoryUC, env)
 
 	transactionEndpoints := router.Group("/api/v1/frame")
 

@@ -70,13 +70,13 @@ func (s *Server) Run() error {
 	transactionUC := transactionUsecase.NewTransactionUsecase(transactionRepo, paymentUC)
 	userUC := userUsecase.NewUserUsecase(userRepository)
 	promoUC := promoUsecase.NewPromoUsecase(promoRepository)
-	categoryUC := categoryUsecase.NewCategoryUsecase(categoryRepository)
+	categoryUC := categoryUsecase.NewCategoryUsecase(categoryRepository, s.cfg.Server.Env)
 	frameUC := frameUsecase.NewFrameUsecase(frameRepository, categoryRepository, s.cfg.Product.BaseUrl)
 	// initialize router
 	transactionController.RegisterHTTPEndpoints(router, transactionUC)
 	userController.RegisterHTTPEndpoints(router, userUC, authService)
 	promoController.RegisterHTTPEndpoints(router, promoUC)
-	frameController.RegisterHTTPEndpoints(router, frameUC, categoryUC)
+	frameController.RegisterHTTPEndpoints(router, frameUC, categoryUC, s.cfg.Server.Env)
 	// quick fix using middleware, initialize transaction Controller
 	transactionController := transactionController.NewTransactionControllers(transactionUC)
 	promoController := promoController.NewPromoController(promoUC)
@@ -88,7 +88,7 @@ func (s *Server) Run() error {
 	promoWebHandler := webHandler.NewPromoHandler(promoUC, userUC)
 	sessionHandler := webHandler.NewSessionHandler(userUC)
 	categoryWebHandler := webHandler.NewCategoryHandler(categoryUC, userUC)
-	frameWebHandler := webHandler.NewFrameHandler(frameUC, userUC, categoryUC)
+	frameWebHandler := webHandler.NewFrameHandler(frameUC, userUC, categoryUC, s.cfg.Server.Env)
 	// Dashboard Promo Router
 	router.GET("/login", sessionHandler.New)
 	router.POST("/session", sessionHandler.Create)

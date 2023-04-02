@@ -51,6 +51,7 @@ type Frame struct {
 	Name       string
 	Location   string
 	Available  bool
+	Counter    int
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }

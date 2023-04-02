@@ -36,6 +36,7 @@ func (u *frameUsecase) SaveFrameImage(input frame.FormInputFrame, fileLocation s
 	saveFrame.Location = input.Location
 	saveFrame.Name = input.Name
 	saveFrame.Url = u.BaseUrl + fileLocation
+	saveFrame.Counter = input.Counter
 	saveFrame.Available = true
 
 	newFrame, err := u.FrameRepo.CreateFrameImage(saveFrame)

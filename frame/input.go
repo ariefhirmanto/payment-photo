@@ -12,6 +12,7 @@ type FormInputFrame struct {
 	Name       string `form:"name" binding:"required"`
 	Location   string `form:"location" binding:"required"`
 	CategoryID int64  `form:"category_id" binding:"required"`
+	Counter    int    `form:"counter" binding:"required"`
 	Error      error
 }
 
@@ -29,4 +30,8 @@ type InputLocationName struct {
 
 type InputFrameID struct {
 	ID int64 `uri:"id" binding:"required"`
+}
+
+type InputFrameName struct {
+	Name string `uri:"frame_name" binding:"required"`
 }

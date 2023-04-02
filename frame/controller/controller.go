@@ -15,10 +15,11 @@ import (
 type frameController struct {
 	frameUC    frame.Usecase
 	categoryUC category.Usecase
+	Env        string
 }
 
-func NewFrameController(frameUC frame.Usecase, categoryUC category.Usecase) *frameController {
-	return &frameController{frameUC: frameUC, categoryUC: categoryUC}
+func NewFrameController(frameUC frame.Usecase, categoryUC category.Usecase, Env string) *frameController {
+	return &frameController{frameUC: frameUC, categoryUC: categoryUC, Env: Env}
 }
 
 func (h *frameController) UploadImage(c *gin.Context) {
@@ -55,9 +56,9 @@ func (h *frameController) UploadImage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	
-	parentDirectory := getDirectory()
-	path := fmt.Sprintf(parentDirectory + "images/%s/%s", category.Name, file.Filename)
+
+	parentDirectory := getDirectory(h.Env)
+	path := fmt.Sprintf(parentDirectory+"images/%s/%s", category.Name, file.Filename)
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		errorMessage := gin.H{"is_uploaded": false}
@@ -148,7 +149,7 @@ func (h *frameController) GetFrameByCategoryName(c *gin.Context) {
 
 	formatter := frame.FormatFrames(frames)
 	response := helper.APIResponse(
-		"Success get data promo code",
+		"Success get data frames by category",
 		http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
@@ -187,16 +188,57 @@ func (h *frameController) GetFrameByLocation(c *gin.Context) {
 
 	formatter := frame.FormatFrames(frames)
 	response := helper.APIResponse(
-		"Success get data promo code",
+		"Success get data frames by location",
 		http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
 
-func getDirectory() string {
-	wd,err := os.Getwd()
+func (h *frameController) GetFrameByID(c *gin.Context) {
+	var input frame.InputFrameID
+	err := c.ShouldBindUri(&input)
 	if err != nil {
-			panic(err)
+		response := helper.APIResponse(
+			"Get frame by id failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
 	}
-	parent := filepath.Dir(wd)
-	return parent
+
+	data, err := h.frameUC.GetFrameByID(input)
+	if err != nil {
+		response := helper.APIResponse(
+			"Get frame failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	category, err := h.categoryUC.FindByIDForFrame(data.CategoryID)
+	if err != nil {
+		response := helper.APIResponse(
+			"Get frame failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	data.Category = category
+
+	formatter := frame.FormatFrame(data)
+	response := helper.APIResponse(
+		"Success get data",
+		http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}
+
+func getDirectory(env string) string {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	url := filepath.Dir(wd)
+	if env != "local" {
+		url = "/app/" + filepath.Dir(wd)
+	}
+
+	return url
 }
