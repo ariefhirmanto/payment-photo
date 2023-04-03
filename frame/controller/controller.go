@@ -237,7 +237,7 @@ func getDirectory(env string) string {
 	}
 	url := filepath.Dir(wd)
 	if env != "local" {
-		url = "/app/" + filepath.Dir(wd)
+		url = "/app" + filepath.Dir(wd)
 	}
 
 	return url
