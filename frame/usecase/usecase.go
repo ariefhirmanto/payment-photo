@@ -73,7 +73,7 @@ func (u *frameUsecase) DeleteFrame(input frame.InputFrameID) error {
 		return err
 	}
 
-	directory := strings.Replace(frame.Url, u.BaseUrl, "", 1)
+	directory := strings.Replace(frame.Url, u.BaseUrl, "/app/", 1)
 	err = os.Remove(directory)
 	if err != nil {
 		log.Printf("[Frame][Usecase][DeleteFrame] Error deleting frame %+v", err)
