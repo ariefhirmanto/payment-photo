@@ -6,7 +6,7 @@ import (
 )
 
 type FrameFormatter struct {
-	ID       int64           `json:"id"`
+	ID       int64           `json:"frame_id"`
 	Name     string          `json:"name"`
 	Category models.Category `json:"category"`
 	Location string          `json:"location"`
