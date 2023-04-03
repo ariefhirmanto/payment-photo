@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -140,6 +141,7 @@ func (h *frameHandler) Delete(c *gin.Context) {
 		return
 	}
 
+	log.Print("[Handler] Delete Frame success")
 	c.Redirect(http.StatusFound, "/frame")
 }
 
