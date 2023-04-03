@@ -35,7 +35,7 @@ func (u *frameUsecase) SaveFrameImage(input frame.FormInputFrame, fileLocation s
 	saveFrame.Category = category
 	saveFrame.Location = input.Location
 	saveFrame.Name = input.Name
-	saveFrame.Url = u.BaseUrl + strings.Replace(fileLocation, "//app", "", 1)
+	saveFrame.Url = strings.Replace(u.BaseUrl+fileLocation, "//app", "", 1)
 	saveFrame.Counter = input.Counter
 	saveFrame.Available = true
 
