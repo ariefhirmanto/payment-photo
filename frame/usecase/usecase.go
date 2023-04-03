@@ -30,14 +30,16 @@ func (u *frameUsecase) SaveFrameImage(input frame.FormInputFrame, fileLocation s
 		return models.Frame{}, err
 	}
 
+	Url := strings.Replace(u.BaseUrl+fileLocation, "//app", "", 1)
 	saveFrame := models.Frame{}
 	saveFrame.CategoryID = input.CategoryID
 	saveFrame.Category = category
 	saveFrame.Location = input.Location
 	saveFrame.Name = input.Name
-	saveFrame.Url = strings.Replace(u.BaseUrl+fileLocation, "//app", "", 1)
+	saveFrame.Url = Url
 	saveFrame.Counter = input.Counter
 	saveFrame.Available = true
+	log.Printf("[Frame][Usecase][SaveFrameImage] saveFrame request %+v", saveFrame)
 
 	newFrame, err := u.FrameRepo.CreateFrameImage(saveFrame)
 	if err != nil {
@@ -71,9 +73,10 @@ func (u *frameUsecase) DeleteFrame(input frame.InputFrameID) error {
 		return err
 	}
 
-	err = os.Remove(strings.Trim(frame.Url, u.BaseUrl))
+	directory := strings.Replace(frame.Url, u.BaseUrl, "", 1)
+	err = os.Remove(directory)
 	if err != nil {
-		log.Printf("[Category][Usecase][CreateCategory] Error creating category %+v", err)
+		log.Printf("[Frame][Usecase][DeleteFrame] Error deleting frame %+v", err)
 		return err
 	}
 
