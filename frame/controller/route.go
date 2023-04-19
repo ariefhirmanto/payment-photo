@@ -17,5 +17,6 @@ func RegisterHTTPEndpoints(router *gin.Engine, uc frame.Usecase, categoryUC cate
 		transactionEndpoints.GET("/category/:category_name", h.GetFrameByCategoryName)
 		transactionEndpoints.GET("/location/:location", h.GetFrameByLocation)
 		transactionEndpoints.GET("/frame/:id", h.GetFrameByID)
+		transactionEndpoints.GET("/name/:frame_name", h.GetFrameByName)
 	}
 }

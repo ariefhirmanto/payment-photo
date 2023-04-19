@@ -11,6 +11,7 @@ type FrameFormatter struct {
 	Category models.Category `json:"category"`
 	Location string          `json:"location"`
 	Url      string          `json:"url"`
+	Counter  int             `json:"counter"`
 }
 
 func FormatFrame(frame models.Frame) FrameFormatter {
@@ -21,6 +22,7 @@ func FormatFrame(frame models.Frame) FrameFormatter {
 	formatter.Category = frame.Category
 	formatter.Location = frame.Location
 	formatter.Url = frame.Url
+	formatter.Counter = frame.Counter
 	fmt.Printf("formatter: %+v\n", formatter)
 	return formatter
 }

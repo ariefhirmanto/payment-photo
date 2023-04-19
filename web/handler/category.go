@@ -53,6 +53,8 @@ func (h *categoryHandler) Create(c *gin.Context) {
 	categoryInput.ImageID = input.ImageID
 	categoryInput.Width = input.Width
 	categoryInput.Height = input.Height
+	categoryInput.IsColumnMirrored = input.IsColumnMirrored
+	categoryInput.IsNoCut = input.IsNoCut
 
 	_, err = h.categoryUC.CreateCategory(categoryInput)
 	if err != nil {
@@ -83,6 +85,8 @@ func (h *categoryHandler) Edit(c *gin.Context) {
 	input.ImageID = existingCategory.ImageID
 	input.Width = existingCategory.Width
 	input.Height = existingCategory.Height
+	input.IsColumnMirrored = existingCategory.IsColumnMirrored
+	input.IsNoCut = existingCategory.IsNoCut
 
 	c.HTML(http.StatusOK, "category_edit.html", input)
 }
@@ -109,6 +113,8 @@ func (h *categoryHandler) Update(c *gin.Context) {
 	updateInput.ImageID = input.ImageID
 	updateInput.Width = input.Width
 	updateInput.Height = input.Height
+	updateInput.IsColumnMirrored = input.IsColumnMirrored
+	updateInput.IsNoCut = input.IsNoCut
 
 	_, err = h.categoryUC.UpdateCategory(updateInput)
 	if err != nil {

@@ -10,4 +10,5 @@ type Repository interface {
 	Delete(input models.Frame) (bool, error)
 	Update(input models.Frame) (models.Frame, error)
 	GetFrameByLocation(input string) ([]models.Frame, error)
+	GetByName(Name string) (models.Frame, error)
 }

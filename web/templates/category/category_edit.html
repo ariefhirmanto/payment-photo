@@ -51,6 +51,24 @@
                 <input type="number" name="height" placeholder="Masukkan Config" required class="form-control" value="{{ .Height }}">
             </div>
 
+            <div class="form-group">
+                <label for="is_column_mirrored">Column Mirrored</label>
+                <select name="is_column_mirrored" class="form-control">
+                    <option value="">-- Select Category --</option>
+                    <option value="true" selected>True</option>
+                    <option value="false" selected>False</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="is_no_cut">No Cut?</label>
+                <select name="is_no_cut" class="form-control">
+                    <option value="">-- Select Category --</option>
+                    <option value="true" selected>True</option>
+                    <option value="false" selected>False</option>
+                </select>
+            </div>
+
             <div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>

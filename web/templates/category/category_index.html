@@ -24,6 +24,8 @@
                     <th>Image ID</th>
                     <th>Width</th>
                     <th>Height</th>
+                    <th>Is Column Mirrored</th>
+                    <th>Is No Cut</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -39,6 +41,8 @@
                     <td>{{ .ImageID }}</td>
                     <td>{{ .Width }}</td>
                     <td>{{ .Height }}</td>
+                    <td>{{ .IsColumnMirrored }}</td>
+                    <td>{{ .IsNoCut }}</td>
                     <td>
                         <form action="/category/delete/{{ .ID }}" method="POST">
                             <button type="submit" class="btn btn-danger">

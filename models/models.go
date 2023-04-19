@@ -57,17 +57,19 @@ type Frame struct {
 }
 
 type Category struct {
-	ID              int64
-	Name            string
-	InterRowPadding int64
-	TopFramePadding int64
-	InterColPadding int64
-	CustomPadding   int64
-	ImageID         int64
-	Width           int64
-	Height          int64
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
+	ID               int64
+	Name             string
+	InterRowPadding  int64
+	TopFramePadding  int64
+	InterColPadding  int64
+	CustomPadding    int64
+	ImageID          int64
+	Width            int64
+	Height           int64
+	IsColumnMirrored bool
+	IsNoCut          bool
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 type Location struct {

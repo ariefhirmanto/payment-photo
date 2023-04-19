@@ -58,6 +58,15 @@ func (u *frameUsecase) GetFrameByID(input frame.InputFrameID) (models.Frame, err
 	return frame, nil
 }
 
+func (u *frameUsecase) GetFrameByName(input frame.InputFrameName) (models.Frame, error) {
+	frame, err := u.FrameRepo.GetByName(input.Name)
+	if (err != nil || frame == models.Frame{}) {
+		return models.Frame{}, err
+	}
+
+	return frame, nil
+}
+
 func (u *frameUsecase) GetFrameByCategoryID(input frame.InputCategoryID) ([]models.Frame, error) {
 	frames, err := u.FrameRepo.GetByCategoryID(input.ID)
 	if err != nil {

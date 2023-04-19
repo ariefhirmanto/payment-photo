@@ -11,4 +11,5 @@ type Usecase interface {
 	ChangeStatusFrame(input InputFrameID) error
 	GetFrameByCategoryName(input InputCategoryName) ([]models.Frame, error)
 	GetFrameByLocation(input InputLocationName) ([]models.Frame, error)
+	GetFrameByName(input InputFrameName) (models.Frame, error)
 }

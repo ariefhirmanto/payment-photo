@@ -36,6 +36,19 @@ func (r *frameRepository) GetByID(ID int64) (models.Frame, error) {
 	return frame, nil
 }
 
+func (r *frameRepository) GetByName(Name string) (models.Frame, error) {
+	var frame models.Frame
+	// with index
+	// err := r.promoDB.Clauses(hints.UseIndex("idx_status")).Where("id = ?", ID).Find(&promoCode).Error
+	// without indexing
+	err := r.frameDB.Where("name = ?", Name).Find(&frame).Error
+	if (err != nil || frame == models.Frame{}) {
+		return frame, err
+	}
+
+	return frame, nil
+}
+
 func (r *frameRepository) GetAll() ([]models.Frame, error) {
 	var frames []models.Frame
 

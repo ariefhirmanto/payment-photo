@@ -8,6 +8,7 @@ import (
 	"payment/frame"
 	category "payment/frame_category"
 	"payment/helper"
+	"payment/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -205,7 +206,44 @@ func (h *frameController) GetFrameByID(c *gin.Context) {
 	}
 
 	data, err := h.frameUC.GetFrameByID(input)
+	if (err != nil || data == models.Frame{}) {
+		response := helper.APIResponse(
+			"Get frame failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	category, err := h.categoryUC.FindByIDForFrame(data.CategoryID)
 	if err != nil {
+		response := helper.APIResponse(
+			"Get frame failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	data.Category = category
+
+	formatter := frame.FormatFrame(data)
+	response := helper.APIResponse(
+		"Success get data",
+		http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *frameController) GetFrameByName(c *gin.Context) {
+	var input frame.InputFrameName
+	err := c.ShouldBindUri(&input)
+	if err != nil {
+		response := helper.APIResponse(
+			"Get frame by name failed",
+			http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	data, err := h.frameUC.GetFrameByName(input)
+	if (err != nil || data == models.Frame{}) {
 		response := helper.APIResponse(
 			"Get frame failed",
 			http.StatusUnprocessableEntity, "error", nil)
