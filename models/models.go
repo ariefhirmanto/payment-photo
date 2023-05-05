@@ -68,6 +68,7 @@ type Category struct {
 	Height           int64
 	IsColumnMirrored bool
 	IsNoCut          bool
+	IsSeasonal       bool
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 }

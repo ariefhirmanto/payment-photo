@@ -21,6 +21,7 @@ type FormInputCategory struct {
 	Height           int64  `form:"height"`
 	IsColumnMirrored bool   `form:"is_column_mirrored"`
 	IsNoCut          bool   `form:"is_no_cut"`
+	IsSeasonal       bool   `form:"is_seasonal"`
 	Error            error
 }
 
@@ -36,6 +37,7 @@ type FormUpdateCategory struct {
 	Height           int64  `form:"height"`
 	IsColumnMirrored bool   `form:"is_column_mirrored"`
 	IsNoCut          bool   `form:"is_no_cut"`
+	IsSeasonal       bool   `form:"is_seasonal"`
 	Error            error
 }
 

@@ -33,6 +33,7 @@ func (u *categoryUsecase) CreateCategory(input category.FormInputCategory) (mode
 	category.Height = input.Height
 	category.IsColumnMirrored = input.IsColumnMirrored
 	category.IsNoCut = input.IsNoCut
+	category.IsSeasonal = input.IsSeasonal
 
 	categoryFromDB, _ := u.CategoryRepo.GetByName(input.Name)
 	if (models.Category{}) != categoryFromDB {

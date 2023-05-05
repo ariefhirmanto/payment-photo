@@ -55,6 +55,7 @@ func (h *categoryHandler) Create(c *gin.Context) {
 	categoryInput.Height = input.Height
 	categoryInput.IsColumnMirrored = input.IsColumnMirrored
 	categoryInput.IsNoCut = input.IsNoCut
+	categoryInput.IsSeasonal = input.IsSeasonal
 
 	_, err = h.categoryUC.CreateCategory(categoryInput)
 	if err != nil {
@@ -87,6 +88,7 @@ func (h *categoryHandler) Edit(c *gin.Context) {
 	input.Height = existingCategory.Height
 	input.IsColumnMirrored = existingCategory.IsColumnMirrored
 	input.IsNoCut = existingCategory.IsNoCut
+	input.IsSeasonal = existingCategory.IsSeasonal
 
 	c.HTML(http.StatusOK, "category_edit.html", input)
 }
@@ -115,6 +117,7 @@ func (h *categoryHandler) Update(c *gin.Context) {
 	updateInput.Height = input.Height
 	updateInput.IsColumnMirrored = input.IsColumnMirrored
 	updateInput.IsNoCut = input.IsNoCut
+	updateInput.IsSeasonal = input.IsSeasonal
 
 	_, err = h.categoryUC.UpdateCategory(updateInput)
 	if err != nil {

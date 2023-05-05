@@ -26,6 +26,7 @@
                     <th>Height</th>
                     <th>Is Column Mirrored</th>
                     <th>Is No Cut</th>
+                    <th>Is Seasonal</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -43,6 +44,7 @@
                     <td>{{ .Height }}</td>
                     <td>{{ .IsColumnMirrored }}</td>
                     <td>{{ .IsNoCut }}</td>
+                    <td>{{ .IsSeasonal }}</td>
                     <td>
                         <form action="/category/delete/{{ .ID }}" method="POST">
                             <button type="submit" class="btn btn-danger">
