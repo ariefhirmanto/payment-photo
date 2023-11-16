@@ -56,6 +56,37 @@ func (u *userUsecase) Login(input users.LoginInput) (models.User, error) {
 	return user, nil
 }
 
+func (u *userUsecase) ChangePassword(input users.ChangePassword) (models.User, error) {
+	email := input.Email
+	password := input.Password
+	user, err := u.UserRepo.FindByEmail(email)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == 0 {
+		return user, errors.New("No user found with that email")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return user, err
+	}
+
+	password, err = bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
+	if err != nil {
+		return user, err
+	}
+
+	user.Password = string(password)
+	updatedUser, err := u.UserRepo.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
 func (u *userUsecase) GetUserByID(ID int) (models.User, error) {
 	user, err := u.UserRepo.FindByID(ID)
 	if err != nil {

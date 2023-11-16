@@ -91,3 +91,40 @@ func (h *userController) Login(c *gin.Context) {
 		http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *userController) ChangePasswordUser(c *gin.Context) {
+	var input users.ChangePasswordInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError((err))
+		errorMessage := gin.H{"errors": errors}
+		response := helper.APIResponse(
+			"Change password account failed",
+			http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	newUser, err := h.userUC.ChangePassword(input)
+	if err != nil {
+		response := helper.APIResponse(
+			"Change password account failed",
+			http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	token, err := h.authService.GenerateToken(newUser.ID)
+	if err != nil {
+		response := helper.APIResponse(
+			"Change password account failed",
+			http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	formatter := users.FormatUser(newUser, token)
+
+	response := helper.APIResponse(
+		"Account has been changed",
+		http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}

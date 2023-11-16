@@ -23,6 +23,15 @@ func (r *userRepository) Save(user models.User) (models.User, error) {
 	return user, nil
 }
 
+func (r *userRepository) Update(user models.User) (models.User, error) {
+	err := r.UserDB.Save(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
 func (r *userRepository) FindByEmail(email string) (models.User, error) {
 	var user models.User
 

@@ -79,3 +79,11 @@ type Location struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type LoginHistory struct {
+	ID        int64
+	Username	string
+	Location	string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}

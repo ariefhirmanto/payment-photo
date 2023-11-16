@@ -14,6 +14,7 @@ func RegisterHTTPEndpoints(router *gin.Engine, uc users.Usecase, auth auth.Servi
 
 	{
 		transactionEndpoints.POST("/login", h.Login)
-		// transactionEndpoints.POST("/register", h.RegisterUser)
+		transactionEndpoints.POST("/register", h.RegisterUser)
+		transactionEndpoints.PUT("/update", h.ChangePassword)
 	}
 }
