@@ -7,5 +7,5 @@ import (
 type Controller interface {
 	Login(c *gin.Context)
 	RegisterUser(c *gin.Context)
-	ChangePassword(c *gin.Context)
+	ChangePasswordUser(c *gin.Context)
 }

@@ -56,7 +56,7 @@ func (u *userUsecase) Login(input users.LoginInput) (models.User, error) {
 	return user, nil
 }
 
-func (u *userUsecase) ChangePassword(input users.ChangePassword) (models.User, error) {
+func (u *userUsecase) ChangePassword(input users.ChangePasswordInput) (models.User, error) {
 	email := input.Email
 	password := input.Password
 	user, err := u.UserRepo.FindByEmail(email)
@@ -73,12 +73,12 @@ func (u *userUsecase) ChangePassword(input users.ChangePassword) (models.User, e
 		return user, err
 	}
 
-	password, err = bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
+	newPassword, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
 	if err != nil {
 		return user, err
 	}
 
-	user.Password = string(password)
+	user.Password = string(newPassword)
 	updatedUser, err := u.UserRepo.Update(user)
 	if err != nil {
 		return updatedUser, err
